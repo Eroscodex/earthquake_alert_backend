@@ -56,6 +56,8 @@ app.get("/api/phivolcs", async (req, res) => {
 
     res.status(500).json({
       error: err.message,
+      cause: err.cause?.message,
+      stack: err.stack,
     });
   }
 });
