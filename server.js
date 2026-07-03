@@ -5,6 +5,10 @@ const app = express();
 
 app.use(cors());
 
+app.get("/", (req, res) => {
+  res.send("PH Earthquake Alert Backend is Running");
+});
+
 app.get("/api/phivolcs", async (req, res) => {
   try {
     const response = await fetch(
@@ -18,7 +22,7 @@ app.get("/api/phivolcs", async (req, res) => {
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+      throw new Error(`PHIVOLCS returned ${response.status}`);
     }
 
     const html = await response.text();
@@ -26,8 +30,12 @@ app.get("/api/phivolcs", async (req, res) => {
     res.setHeader("Content-Type", "text/html");
     res.send(html);
   } catch (err) {
+    console.error(err);
+
     res.status(500).json({
+      success: false,
       error: err.message,
+      cause: err.cause?.message ?? null,
     });
   }
 });
